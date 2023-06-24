@@ -21,11 +21,11 @@ app.get('/', (request, response) => {
 });
 
 // Submit prompt
-app.post('/', (request, response) => {
+app.post('/', async (request, response) => {
     // Get prompt from req and send to OpenAI
     if (request.body.prompt) {
-        let llmResponse = sendPrompt(request.body.prompt);
-        response.send(llmResponse)
+        let llmResponse = await sendPrompt(request.body.prompt)
+        response.json({llmResponse: llmResponse})
     } else {
         console.error('No prompt provided');
     }
