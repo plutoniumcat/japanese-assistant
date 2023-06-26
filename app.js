@@ -6,7 +6,7 @@ const express = require('express');
 const app = express();
 
 // Import LLM functions
-const { sendPrompt } = require('./llm');
+const { sendPrompt, sendScheduleEmail } = require('./llm');
 
 // Enable JSON
 app.use(express.json());
@@ -29,7 +29,13 @@ app.post('/', async (request, response) => {
     } else {
         console.error('No prompt provided');
     }
-})
+});
+
+// Submit scheduling email
+app.post('/email', async (request, response) => {
+    let llmResponse = await sendScheduleEmail(request)
+    response.json({llmResponse: llmResponse})
+});
 
 // Activate server
 app.listen(PORT, () => {
