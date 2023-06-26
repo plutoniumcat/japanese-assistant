@@ -1,7 +1,9 @@
 // Use environment variables
 require('dotenv').config();
 
-const { PromptTemplate, LLMChain, SequentialChain } = require('langchain');
+// Import prompt templates and chains from langchain
+const { PromptTemplate } = require('langchain');
+const { LLMChain, SequentialChain } = require('langchain/chains')
 // Import OpenAI from langchain
 const { OpenAI } = require("langchain/llms/openai");
 
@@ -45,7 +47,8 @@ const backTranslateChain = new LLMChain({
 const emailSequentialChain = new SequentialChain({
     chains: [scheduleEmailChain, backTranslateChain],
     inputVariables: ['dates', 'info'],
-    outputVariables: ['jpText', 'enText']
+    outputVariables: ['jpText', 'enText'],
+    verbose: true
 });
 
 // Send prompt to LLM
@@ -56,7 +59,7 @@ async function sendPrompt(prompt) {
 
 // Send schedule email chain to LLM
 async function sendScheduleEmail(request) {
-    const result = await scheduleEmailChain.call({dates: request.body.dates, info: request.body.info});
+    const result = await emailSequentialChain.call({dates: request.body.dates, info: request.body.info});
     return result
 }
 
